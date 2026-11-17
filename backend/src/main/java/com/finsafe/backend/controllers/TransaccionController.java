@@ -43,4 +43,8 @@ public class TransaccionController {
         return new ResponseEntity<>(mensajeDeError, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(org.springframework.http.converter.HttpMessageNotReadableException.class)
+    public ResponseEntity<String> manejarErrorDeFormato(org.springframework.http.converter.HttpMessageNotReadableException ex) {
+        return new ResponseEntity<>("Categoría inexistente o formato de datos incorrecto", HttpStatus.BAD_REQUEST);
+    }
 }

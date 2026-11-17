@@ -1,6 +1,8 @@
 package com.finsafe.backend.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.finsafe.backend.enums.CategoriaFinanciera;
+
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -25,8 +27,9 @@ public class Transaccion {
     @Column(nullable = false)
     private String tipo; // "INGRESO" o "GASTO"
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String categoria;
+    private CategoriaFinanciera categoria;
 
     // Relación con el Usuario: Muchas transacciones pertenecen a un usuario
     @ManyToOne(fetch = FetchType.LAZY)
@@ -53,8 +56,8 @@ public class Transaccion {
     public String getTipo() { return tipo; }
     public void setTipo(String tipo) { this.tipo = tipo; }
 
-    public String getCategoria() { return categoria; }
-    public void setCategoria(String categoria) { this.categoria = categoria; }
+    public CategoriaFinanciera getCategoria() { return categoria; }
+    public void setCategoria(CategoriaFinanciera categoria) { this.categoria = categoria; }
 
     public Usuario getUsuario() { return usuario; }
     public void setUsuario(Usuario usuario) { this.usuario = usuario; }

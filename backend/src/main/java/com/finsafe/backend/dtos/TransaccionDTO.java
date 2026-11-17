@@ -6,6 +6,8 @@ import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import com.finsafe.backend.enums.CategoriaFinanciera;
+
 public class TransaccionDTO {
 
     @NotNull(message = "El valor es obligatorio")
@@ -21,8 +23,8 @@ public class TransaccionDTO {
     @NotBlank(message = "El tipo es obligatorio (INGRESO o GASTO)")
     private String tipo; // "INGRESO" o "GASTO"
 
-    @NotBlank(message = "La categoría es obligatoria")
-    private String categoria; // Temporalmente un String, luego lo uniremos al catálogo
+    @NotNull(message = "La categoría es obligatoria y debe ser válida")
+    private CategoriaFinanciera categoria;
 
     // Getters y Setters
     public BigDecimal getValor() { return valor; }
@@ -33,6 +35,6 @@ public class TransaccionDTO {
     public void setFecha(LocalDate fecha) { this.fecha = fecha; }
     public String getTipo() { return tipo; }
     public void setTipo(String tipo) { this.tipo = tipo; }
-    public String getCategoria() { return categoria; }
-    public void setCategoria(String categoria) { this.categoria = categoria; }
+    public CategoriaFinanciera getCategoria() { return categoria; }
+    public void setCategoria(CategoriaFinanciera categoria) { this.categoria = categoria; }
 }
