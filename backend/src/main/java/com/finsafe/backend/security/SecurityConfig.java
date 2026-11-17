@@ -24,6 +24,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 // Permitir acceso público a la ruta de registro (FIN-1)
                 .requestMatchers("/api/usuarios/**").permitAll()
+                .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/transacciones/usuario/*").permitAll()
+                .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/transacciones/usuario/*").permitAll()
                 // Cualquier otra ruta requerirá autenticación
                 .anyRequest().authenticated()
             );
