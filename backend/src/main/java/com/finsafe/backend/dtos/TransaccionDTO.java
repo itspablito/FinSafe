@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.finsafe.backend.enums.CategoriaFinanciera;
 
 public class TransaccionDTO {
@@ -23,6 +24,7 @@ public class TransaccionDTO {
     @NotBlank(message = "El tipo es obligatorio (INGRESO o GASTO)")
     private String tipo; // "INGRESO" o "GASTO"
 
+    @JsonAlias("categoria")
     @NotNull(message = "La categoría es obligatoria y debe ser válida")
     private CategoriaFinanciera categoria;
 

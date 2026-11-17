@@ -1,5 +1,7 @@
 package com.finsafe.backend.enums;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 public enum CategoriaFinanciera {
     // Categorías de Ingresos
     SUELDO,
@@ -14,5 +16,10 @@ public enum CategoriaFinanciera {
     ENTRETENIMIENTO,
     SALUD,
     EDUCACION,
-    OTROS_GASTOS
-}
+    OTROS_GASTOS;
+
+    @JsonCreator
+    public static CategoriaFinanciera fromString(String value) {
+        return value == null ? null : CategoriaFinanciera.valueOf(value.trim().toUpperCase());
+    }
+}   

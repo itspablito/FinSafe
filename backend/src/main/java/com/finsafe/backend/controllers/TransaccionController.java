@@ -4,7 +4,6 @@ import com.finsafe.backend.dtos.TransaccionDTO;
 import com.finsafe.backend.models.Transaccion;
 import com.finsafe.backend.services.TransaccionService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,14 +11,17 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/transacciones")
+@RequestMapping("/api/transacciones/usuario/{usuarioId}")
 public class TransaccionController {
 
-    @Autowired
-    private TransaccionService transaccionService;
+    
+    private final TransaccionService transaccionService;
+    public TransaccionController(TransaccionService transaccionService) {
+    this.transaccionService = transaccionService;
+}
 
     // POST: /api/transacciones/usuario/1
-    @PostMapping("/usuario/{usuarioId}")
+    @PostMapping
     public ResponseEntity<?> registrar(@PathVariable Long usuarioId, @Valid @RequestBody TransaccionDTO dto) {
         try {
             Transaccion nuevaTransaccion = transaccionService.registrarTransaccion(usuarioId, dto);
@@ -30,7 +32,7 @@ public class TransaccionController {
     }
 
     // GET: /api/transacciones/usuario/1
-    @GetMapping("/usuario/{usuarioId}")
+    @GetMapping
     public ResponseEntity<List<Transaccion>> listarPropias(@PathVariable Long usuarioId) {
         List<Transaccion> transacciones = transaccionService.obtenerTransaccionesPorUsuario(usuarioId);
         return new ResponseEntity<>(transacciones, HttpStatus.OK);

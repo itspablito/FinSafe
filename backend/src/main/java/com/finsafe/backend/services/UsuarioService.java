@@ -5,15 +5,17 @@ import com.finsafe.backend.dtos.LoginUsuarioDTO;
 import com.finsafe.backend.dtos.RegistroUsuarioDTO;
 import com.finsafe.backend.models.Usuario;
 import com.finsafe.backend.repositories.UsuarioRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UsuarioService {
 
-    @Autowired
-    private UsuarioRepository usuarioRepository;
+    
+    private final UsuarioRepository usuarioRepository;
+    public UsuarioService(UsuarioRepository usuarioRepository) {
+        this.usuarioRepository = usuarioRepository;
+    }
 
     private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 

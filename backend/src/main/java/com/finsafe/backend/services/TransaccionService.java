@@ -5,7 +5,6 @@ import com.finsafe.backend.models.Transaccion;
 import com.finsafe.backend.models.Usuario;
 import com.finsafe.backend.repositories.TransaccionRepository;
 import com.finsafe.backend.repositories.UsuarioRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,11 +12,14 @@ import java.util.List;
 @Service
 public class TransaccionService {
 
-    @Autowired
-    private TransaccionRepository transaccionRepository;
+    
+    private final TransaccionRepository transaccionRepository;
+    private final UsuarioRepository usuarioRepository;
 
-    @Autowired
-    private UsuarioRepository usuarioRepository;
+    public TransaccionService(TransaccionRepository transaccionRepository, UsuarioRepository usuarioRepository) {
+        this.transaccionRepository = transaccionRepository;
+        this.usuarioRepository = usuarioRepository;
+    }
 
     // Registrar un nuevo ingreso o gasto
     public Transaccion registrarTransaccion(Long usuarioId, TransaccionDTO dto) {
