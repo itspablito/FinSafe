@@ -23,7 +23,7 @@ public class SecurityConfig {
             // Configurar los permisos de las rutas
             .authorizeHttpRequests(auth -> auth
                 // Permitir acceso público a la ruta de registro (FIN-1)
-                .requestMatchers("/api/usuarios/registro").permitAll()
+                .requestMatchers("/api/usuarios/**").permitAll()
                 // Cualquier otra ruta requerirá autenticación
                 .anyRequest().authenticated()
             );

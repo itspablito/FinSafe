@@ -1,5 +1,7 @@
 package com.finsafe.backend.controllers;
 
+import com.finsafe.backend.dtos.ActualizarPerfilDTO;
+import com.finsafe.backend.dtos.LoginUsuarioDTO;
 import com.finsafe.backend.dtos.RegistroUsuarioDTO;
 import com.finsafe.backend.models.Usuario;
 import com.finsafe.backend.services.UsuarioService;
@@ -25,4 +27,35 @@ public class UsuarioController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> loginUsuario(@Valid @RequestBody LoginUsuarioDTO loginDTO) {
+        try {
+            Usuario usuarioAutenticado = usuarioService.login(loginDTO);
+            return new ResponseEntity<>(usuarioAutenticado, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> obtenerPerfil(@PathVariable Long id) {
+        try {
+            Usuario usuario = usuarioService.obtenerPerfil(id);
+            return new ResponseEntity<>(usuario, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> actualizarPerfil(@PathVariable Long id, @Valid @RequestBody ActualizarPerfilDTO dto) {
+        try {
+            Usuario usuarioActualizado = usuarioService.actualizarPerfil(id, dto);
+            return new ResponseEntity<>(usuarioActualizado, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }
