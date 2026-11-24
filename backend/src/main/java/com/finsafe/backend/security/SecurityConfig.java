@@ -5,31 +5,55 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            // Deshabilitar CSRF (común en APIs REST)
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(csrf -> csrf.disable())
-            
-            // Configurar el manejo de sesiones como sin estado (para futuro uso de JWT)
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            
-            // Configurar los permisos de las rutas
             .authorizeHttpRequests(auth -> auth
-                // Permitir acceso público a la ruta de registro (FIN-1)
-                .requestMatchers("/api/usuarios/**", "/error", "/api/presupuestos/**","/api/grupos/**","/api/exportar/**").permitAll()
-                .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/transacciones/usuario/*").permitAll()
-                .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/transacciones/usuario/*").permitAll()
-                // Cualquier otra ruta requerirá autenticación
+                .requestMatchers(
+                    "/api/usuarios/**",
+                    "/api/transacciones/**",
+                    "/api/presupuestos/**",
+                    "/api/grupos/**",
+                    "/api/exportar/**",
+                    "/api/dashboard/**",
+                    "/error"
+                ).permitAll()
                 .anyRequest().authenticated()
             );
-            
+
         return http.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("*")); // Permite peticiones desde cualquier puerto local del frontend
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("*"));
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }
