@@ -4,6 +4,7 @@ import com.finsafe.backend.dtos.ActualizarPerfilDTO;
 import com.finsafe.backend.dtos.LoginUsuarioDTO;
 import com.finsafe.backend.dtos.RegistroUsuarioDTO;
 import com.finsafe.backend.models.Usuario;
+import com.finsafe.backend.security.JwtUtil;
 import com.finsafe.backend.services.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -16,9 +17,11 @@ public class UsuarioController {
 
     
     private final UsuarioService usuarioService;
+    private final JwtUtil jwtUtil;
 
-    public UsuarioController(UsuarioService usuarioService) {
+    public UsuarioController(UsuarioService usuarioService, JwtUtil jwtUtil) {
         this.usuarioService = usuarioService;
+        this.jwtUtil = jwtUtil;
     }
 
     @PostMapping("/registro")
@@ -32,10 +35,18 @@ public class UsuarioController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginUsuario(@Valid @RequestBody LoginUsuarioDTO loginDTO) {
+    public ResponseEntity<?> login(@Valid @RequestBody LoginUsuarioDTO loginDTO) {
         try {
-            Usuario usuarioAutenticado = usuarioService.login(loginDTO);
-            return new ResponseEntity<>(usuarioAutenticado, HttpStatus.OK);
+            Usuario usuario = usuarioService.login(loginDTO);
+            String token = jwtUtil.generarToken(usuario.getId(), usuario.getCorreoElectronico());
+
+            java.util.Map<String, Object> respuesta = new java.util.HashMap<>();
+            respuesta.put("mensaje", "Inicio de sesión exitoso");
+            respuesta.put("token", token);
+            respuesta.put("usuarioId", usuario.getId());
+            respuesta.put("nombre", usuario.getNombre());
+
+            return new ResponseEntity<>(respuesta, HttpStatus.OK);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
